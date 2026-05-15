@@ -27,16 +27,20 @@
   </style>
 </head>
 <body>
+<script>
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistrations().then(regs=>{regs.forEach(r=>r.unregister());});
+  }
+  if('caches' in window){
+    caches.keys().then(names=>{names.forEach(n=>caches.delete(n));});
+  }
+</script>
 <div id="root"></div>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
-<script>
-  if('serviceWorker' in navigator){
-    window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
-  }
-</script>
+  
 <script type="text/babel">
 const { useState, useMemo, useEffect, useRef } = React;
 
@@ -49,13 +53,7 @@ const PRODUCTS=[
   {id:2, brand:"ロシアケーキ",    name:"ロシアケーキ 18個入",                  l:330,w:265,h:50},
   {id:3, brand:"ロシアケーキ",    name:"ロシアケーキ 24個入",                  l:310,w:353,h:53},
   {id:4, brand:"ロシアケーキ",    name:"ロシアケーキ 6個入（巾着）",           l:80, w:100,h:190},
-  {id:5, brand:"ロシアケーキ",    name:"ロシアケーキ 2個入（ブルーベリーサン）",  l:270,w:190,h:95},
-  {id:6, brand:"ロシアケーキ",    name:"ロシアケーキ 2個入（ココナッツマカロン）",l:270,w:190,h:95},
-  {id:7, brand:"ロシアケーキ",    name:"ロシアケーキ 2個入（パールチーズ）",      l:270,w:190,h:95},
-  {id:8, brand:"ロシアケーキ",    name:"ロシアケーキ 2個入（パンプキンフラワー）",l:270,w:190,h:95},
-  {id:9, brand:"ロシアケーキ",    name:"ロシアケーキ 2個入（キウイフルーツ）",    l:270,w:190,h:95},
-  {id:10,brand:"ロシアケーキ",    name:"ロシアケーキ 2個入（オレンジタルト）",    l:270,w:190,h:95},
-  {id:11,brand:"ロシアケーキ",    name:"ロシアケーキ 2個入（チョコアーモンド）",  l:270,w:190,h:95},
+  {id:5, brand:"ロシアケーキ",    name:"ロシアケーキ 2個入 7箱セット",            l:270,w:190,h:95},
   {id:12,brand:"ハイレーズン",    name:"ハイレーズン 8個入",                   l:223,w:176,h:42},
   {id:13,brand:"ハイレーズン",    name:"ハイレーズン 12個入",                  l:223,w:255,h:42},
   {id:14,brand:"ハイレーズン",    name:"ハイレーズン 20個入",                  l:272,w:334,h:42},
@@ -70,12 +68,12 @@ const PRODUCTS=[
   {id:23,brand:"モンキューブ",    name:"モンキューブ 4個入（巾着）",           l:80, w:100,h:190},
   {id:24,brand:"クランベリーサンド",name:"クランベリーサンド 5個入",           l:80, w:100,h:190},
   {id:25,brand:"ダックワーズ",    name:"ダックワーズ 5個入",                   l:80, w:100,h:190},
-  {id:26,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（①）",             l:270,w:190,h:95},
-  {id:27,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（②）",             l:270,w:190,h:95},
-  {id:28,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（③）",             l:270,w:190,h:95},
-  {id:29,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（④）",             l:270,w:190,h:95},
-  {id:30,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（⑤）",             l:270,w:190,h:95},
-  {id:31,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（⑥）",             l:270,w:190,h:95},
+  {id:26,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（ブルーベリーサン）",   l:270,w:190,h:95},
+  {id:27,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（パイ畑）",             l:270,w:190,h:95},
+  {id:28,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（クランベリーサンド）", l:270,w:190,h:95},
+  {id:29,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（ダックワーズ）",       l:270,w:190,h:95},
+  {id:30,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（レーズンサンド）",     l:270,w:190,h:95},
+  {id:31,brand:"ホワイエ",        name:"ホワイエ巾着 3個入（ストロベリーロシア）", l:270,w:190,h:95},
 ];
 
 const BS={
